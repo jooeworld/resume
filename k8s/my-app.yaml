@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-resume-deployment
+  labels:
+    app: my-resume
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-resume
+  template:
+    metadata:
+      labels:
+        app: my-resume
+    spec:
+      containers:
+        - name: my-resume
+          image: jashanibt/my-resume:1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: regcred
+
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-resume-service
+spec:
+  selector:
+    app: my-resume
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30090
